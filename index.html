@@ -3,29 +3,25 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>MY NOTE PAD</title>
+    <title>My to-do List</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-    />
-    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div id="container">
-      <div id="list-header">
-        <div id="addNote" onclick="popUp()">
-          <i class="fa-solid fa-pen"> Add Note</i>
+    <div class="container">
+      <div class="todo-app">
+        <h2>
+          To-do List
+          <img
+            src="https://media.istockphoto.com/id/919545224/photo/shopping-list-concept.webp?b=1&s=170667a&w=0&k=20&c=rAf-Xt1LUkx4RnRvBG3uOBDv1xTsJH7C_nu7c70DVgs="
+            alt=""
+          />
+        </h2>
+        <div class="row">
+          <input type="text" id="input-box" placeholder="Add your text" />
+          <button onclick="addTask()">Add Task</button>
         </div>
-        <div class="blankDiv"></div>
-        <div class="blankDiv"></div>
-      </div>
-      <div id="list-container">
-        <ul id="notes-list"></ul>
+        <ul id="list-container"></ul>
       </div>
     </div>
     <script src="script.js"></script>

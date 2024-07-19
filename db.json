@@ -1,0 +1,78 @@
+{
+  "todos": [
+    {
+      "todo": "Wake up at 8am",
+      "id": "1"
+    },
+    {
+      "id": "2",
+      "todo": "Go to the gym",
+      "time": "7.30am",
+      "duration": "1hr 30mins",
+      "completed": false
+    },
+    {
+      "id": "3",
+      "todo": "Make breakfast",
+      "time": "9.00am",
+      "duration": "1hr",
+      "completed": false
+    },
+    {
+      "id": "4",
+      "todo": "Begin school project",
+      "time": "10.00am",
+      "duration": "4hr 30mins",
+      "completed": false
+    },
+    {
+      "id": "5",
+      "todo": "Grocery shopping",
+      "time": "4.00pm",
+      "duration": "1hr 30mins",
+      "completed": false
+    },
+    {
+      "id": "6",
+      "todo": "Make dinner",
+      "time": "6.00pm",
+      "duration": "1hr 30mins",
+      "completed": false
+    },
+    {
+      "id": "7",
+      "todo": "Feed the dog",
+      "time": "8.00pm",
+      "duration": "30mins",
+      "completed": false
+    },
+    {
+      "id": "8",
+      "todo": "Finish school project",
+      "time": "9.00pm",
+      "duration": "1hr 30mins",
+      "completed": false
+    },
+    {
+      "id": "f076",
+      "todo": "Brush teeth",
+      "time": "",
+      "duration": "",
+      "completed": false
+    },
+    {
+      "id": "bec7",
+      "todo": "hey",
+      "time": "",
+      "duration": "",
+      "completed": false
+    },
+    {
+      "id": "faa0",
+      "todo": "yooo",
+      "time": "",
+      "duration": "",
+      "completed": false
+    }
+  ]
+}

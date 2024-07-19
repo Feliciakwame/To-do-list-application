@@ -1,105 +1,123 @@
-function popUp() {
-  const popUpContainer = document.createElement("div");
-  popUpContainer.id = "popUpContainer";
-  popUpContainer.innerHTML = `
-        <h1>New Note</h1>
-        <textarea id="note-text" placeholder="Enter your note"></textarea>
-        <div id="btn-container">
-            <button id="submitBtn" onclick="createNote()">Create Note</button>
-            <button id="closeBtn" onclick="closePopup()">Close</button>
-        </div>
-    `;
-  document.body.appendChild(popUpContainer);
+const inputBox = document.getElementById("input-box");
+const listContainer = document.getElementById("list-container");
+
+// Function to fetch todos from the JSON file and display them
+function fetchTodos() {
+  fetch("http://localhost:3000/todos") // Adjust the URL if necessary
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Fetched data:", data); // Debugging: Check the fetched data
+      if (Array.isArray(data)) {
+        displayTodos(data);
+      } else if (Array.isArray(data.todos)) {
+        displayTodos(data.todos);
+      } else {
+        console.error("Data format is incorrect:", data);
+      }
+    })
+    .catch((error) => console.error("Error fetching todos:", error));
 }
 
-function closePopup() {
-  const popUpContainer = document.getElementById("popUpContainer");
-  if (popUpContainer) {
-    popUpContainer.remove();
-  }
-}
-
-function createNote() {
-  const noteText = document.getElementById("note-text").value;
-  if (noteText.trim() !== "") {
-    const note = {
-      id: new Date().getTime(),
-      text: noteText,
-    };
-    const existingNotes = JSON.parse(localStorage.getItem("notes")) || [];
-    existingNotes.push(note);
-    localStorage.setItem("notes", JSON.stringify(existingNotes));
-    document.getElementById("note-text").value = "";
-    closePopup();
-    displayNotes();
-  }
-}
-
-function displayNotes() {
-  const notesList = document.getElementById("notes-list");
-  notesList.innerHTML = "";
-  const notes = JSON.parse(localStorage.getItem("notes")) || [];
-  notes.forEach((note) => {
-    const listItem = document.createElement("li");
-    listItem.innerHTML = `
-            <span>${note.text}</span>
-            <div id="notesBtns-container">
-                <button id="editBtn" onclick="editNote(${note.id})"><i class="fa-solid fa-pen"></i></button>
-                <button id="deleteBtn" onclick="deleteNote(${note.id})"><i class="fa-solid fa-trash"></i></button>
-            </div>
-        `;
-    notesList.appendChild(listItem);
+// Function to display todos on the page
+function displayTodos(todos) {
+  listContainer.innerHTML = ""; // Clear existing todos
+  todos.forEach((todo) => {
+    if (todo && todo.id && todo.todo !== undefined) {
+      const li = document.createElement("li");
+      li.dataset.id = todo.id;
+      // Ensure the 'completed' property is a boolean
+      li.classList.toggle("checked", todo.completed);
+      li.innerHTML = `
+                <span>${todo.todo}</span>
+                <button class="edit-btn">Edit</button>
+                <button class="delete-btn">Delete</button>
+            `;
+      listContainer.appendChild(li);
+    } else {
+      console.error("Todo item is missing required properties:", todo);
+    }
   });
 }
 
-function editNote(noteId) {
-  const notes = JSON.parse(localStorage.getItem("notes")) || [];
-  const noteToEdit = notes.find((note) => note.id == noteId);
-  const noteText = noteToEdit ? noteToEdit.text : "";
-  const editingPopUp = document.createElement("div");
-  editingPopUp.innerHTML = `
-        <div id="editing-container" data-note-id="${noteId}">
-            <h1>Edit Note</h1>
-            <textarea id="edit-note-text">${noteText}</textarea>
-            <div id="btn-container">
-                <button id="updateBtn" onclick="updateNote()">Done</button>
-                <button id="cancelBtn" onclick="closeEditPopup()">Cancel</button>
-            </div>
-        </div>
-    `;
-  document.body.appendChild(editingPopUp);
-}
-
-function closeEditPopup() {
-  const editingPopUp = document.getElementById("editing-container");
-  if (editingPopUp) {
-    editingPopUp.remove();
+// Function to add a new task
+function addTask() {
+  if (inputBox.value === "") {
+    alert("Please enter a task");
+    return;
   }
+
+  const newTodo = {
+    todo: inputBox.value,
+    time: "",
+    duration: "",
+    completed: false,
+  };
+
+  fetch("http://localhost:3000/todos", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(newTodo),
+  })
+    .then((response) => response.json())
+    .then(() => {
+      fetchTodos(); // Refresh the list of todos
+      inputBox.value = ""; // Clear input box
+    })
+    .catch((error) => console.error("Error adding task:", error));
 }
 
-function updateNote() {
-  const noteText = document.getElementById("edit-note-text").value.trim();
-  const editingPopUp = document.getElementById("editing-container");
-  if (noteText !== "") {
-    const noteId = editingPopUp.getAttribute("data-note-id");
-    let notes = JSON.parse(localStorage.getItem("notes")) || [];
-    const updatedNotes = notes.map((note) => {
-      if (note.id == noteId) {
-        return { id: note.id, text: noteText };
-      }
-      return note;
-    });
-    localStorage.setItem("notes", JSON.stringify(updatedNotes));
-    editingPopUp.remove();
-    displayNotes();
+// Function to handle click events for editing, deleting, and marking tasks
+listContainer.addEventListener("click", function (e) {
+  const target = e.target;
+  const li = target.closest("li");
+  if (!li) return; // If no <li> found, exit
+
+  const todoId = li.dataset.id;
+
+  if (target.classList.contains("edit-btn")) {
+    // Handle editing
+    const newTodoText = prompt(
+      "Edit your task:",
+      li.querySelector("span").textContent
+    );
+    if (newTodoText) {
+      fetch(`http://localhost:3000/todos/${todoId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ todo: newTodoText }),
+      })
+        .then((response) => response.json())
+        .then(() => fetchTodos()) // Refresh the list
+        .catch((error) => console.error("Error updating task:", error));
+    }
+  } else if (target.classList.contains("delete-btn")) {
+    // Handle deleting
+    fetch(`http://localhost:3000/todos/${todoId}`, {
+      method: "DELETE",
+    })
+      .then((response) => response.json())
+      .then(() => fetchTodos()) // Refresh the list
+      .catch((error) => console.error("Error deleting task:", error));
+  } else if (target.tagName === "LI") {
+    // Handle marking as completed
+    const isChecked = !li.classList.contains("checked");
+    li.classList.toggle("checked", isChecked);
+    fetch(`http://localhost:3000/todos/${todoId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ completed: isChecked }),
+    })
+      .then((response) => response.json())
+      .then(() => fetchTodos()) // Refresh the list
+      .catch((error) => console.error("Error toggling task status:", error));
   }
-}
+});
 
-function deleteNote(noteId) {
-  let notes = JSON.parse(localStorage.getItem("notes")) || [];
-  notes = notes.filter((note) => note.id !== noteId);
-  localStorage.setItem("notes", JSON.stringify(notes));
-  displayNotes();
-}
-
-document.addEventListener("DOMContentLoaded", displayNotes);
+// Fetch todos when the page loads
+document.addEventListener("DOMContentLoaded", fetchTodos);
