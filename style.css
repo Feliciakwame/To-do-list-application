@@ -13,10 +13,12 @@
 .todo-app {
   width: 100%;
   max-width: 800px;
-  background-color: white;
+  background-color: rgb(253, 247, 247);
   margin: 100px auto 20px;
   padding: 70px;
   border-radius: 10px;
+  justify-content: center;
+  text-wrap: wrap;
   overflow: scroll;
 }
 .todo-app h2 {
@@ -61,23 +63,44 @@ button:hover {
   transition-duration: 0.25s;
   background-color: #32bcdf;
 }
+ul {
+  background-color: white;
+  margin-left: 0px;
+}
 ul li {
   list-style: none;
-  font-size: 15px;
+  font-size: 20px;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   text-wrap: nowrap;
-  text-align: left;
-  padding: 10px;
+  text-align: right;
+  padding: 12px 8px 12px 50px;
   user-select: none;
   cursor: pointer;
   position: relative;
+}
+ul li ::before {
+  content: "";
+  position: absolute;
+  height: 28px;
+  width: 28px;
+  border-radius: 50%;
+  background-image: url(to-do-list-image.jpg);
+  background-size: cover;
+  background-position: center;
+  top: 12px;
+  left: 8px;
 }
 ul li.checked {
   color: black;
   text-decoration: line-through;
 }
+ul li.checked ::before {
+  background-image: url(ticked.png);
+}
 ul li span {
-  position: absolute;
+  display: flex;
+  margin: 0px;
+  justify-content: left;
   right: 0;
   top: 5px;
   width: 40px;
@@ -91,6 +114,29 @@ ul li.checked span {
   text-decoration: line-through;
   color: black;
 }
-ul li span:hover {
-  background-color: #dfdbdb;
+
+.style-btn {
+  margin: auto;
+}
+.edit-btn,
+.mark-as-done,
+.delete-btn {
+  margin-left: 10px;
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+}
+.edit-btn,
+.mark-as-done,
+.delete-btn {
+  background-color: #35a0e7;
+}
+.delete-btn:hover {
+  background-color: #df2443;
+}
+.edit-btn:hover {
+  background-color: green;
+}
+.mark-as-done:hover {
+  background-color: #ae69c9;
 }

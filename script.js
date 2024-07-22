@@ -3,10 +3,10 @@ const listContainer = document.getElementById("list-container");
 
 // Function to fetch todos from the JSON file and display them
 function fetchTodos() {
-  fetch("http://localhost:3000/todos") // Adjust the URL if necessary
+  fetch("https://codingbackend-2.vercel.app/todos")
     .then((response) => response.json())
     .then((data) => {
-      console.log("Fetched data:", data); // Debugging: Check the fetched data
+      console.log("Fetched data:", data);
       if (Array.isArray(data)) {
         displayTodos(data);
       } else if (Array.isArray(data.todos)) {
@@ -20,21 +20,22 @@ function fetchTodos() {
 
 // Function to display todos on the page
 function displayTodos(todos) {
-  listContainer.innerHTML = ""; // Clear existing todos
+  listContainer.innerHTML = "";
   todos.forEach((todo) => {
     if (todo && todo.id && todo.todo !== undefined) {
       const li = document.createElement("li");
       li.dataset.id = todo.id;
-      // Ensure the 'completed' property is a boolean
       li.classList.toggle("checked", todo.completed);
       li.innerHTML = `
                 <span>${todo.todo}</span>
-                <button class="edit-btn">Edit</button>
-                <button class="delete-btn">Delete</button>
+                <div class="style-btn">
+                    <button class="mark-as-done">Completed</button>
+                    <button class="delete-btn">Delete</button>
+                </div>
             `;
       listContainer.appendChild(li);
     } else {
-      console.error("Todo item is missing required properties:", todo);
+      console.error("Todo item is missing some properties:", todo);
     }
   });
 }
@@ -48,12 +49,10 @@ function addTask() {
 
   const newTodo = {
     todo: inputBox.value,
-    time: "",
-    duration: "",
     completed: false,
   };
 
-  fetch("http://localhost:3000/todos", {
+  fetch("https://codingbackend-2.vercel.app/todos", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -62,62 +61,61 @@ function addTask() {
   })
     .then((response) => response.json())
     .then(() => {
-      fetchTodos(); // Refresh the list of todos
-      inputBox.value = ""; // Clear input box
+      fetchTodos();
+      inputBox.value = "";
     })
     .catch((error) => console.error("Error adding task:", error));
 }
 
-// Function to handle click events for editing, deleting, and marking tasks
+// Function to handle marking a task as done/undone
+function markAsDone(todoId, li) {
+  const isChecked = !li.classList.contains("checked");
+  li.classList.toggle("checked", isChecked);
+  fetch(`https://codingbackend-2.vercel.app/todos/${todoId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ completed: isChecked }),
+  })
+    .then((response) => response.json())
+    .then(() => fetchTodos())
+    .catch((error) => console.error("Error marking tasks:", error));
+}
+
+// Function to handle deleting a task
+function handleDelete(todoId) {
+  if (confirm("Are you sure you want to delete this task?")) {
+    fetch(`https://codingbackend-2.vercel.app/todos/${todoId}`, {
+      method: "DELETE",
+    })
+      .then((response) => {
+        if (!response.ok) {
+          return;
+          response.text().then((text) => {
+            throw new Error(text);
+          });
+        }
+        return response.json();
+      })
+      .then(() => fetchTodos())
+      .catch((error) => console.error("Error deleting task", error));
+  }
+}
+
+// Event listener for clicks on the list container
 listContainer.addEventListener("click", function (e) {
   const target = e.target;
   const li = target.closest("li");
-  if (!li) return; // If no <li> found, exit
+  if (!li) return;
 
   const todoId = li.dataset.id;
 
-  if (target.classList.contains("edit-btn")) {
-    // Handle editing
-    const newTodoText = prompt(
-      "Edit your task:",
-      li.querySelector("span").textContent
-    );
-    if (newTodoText) {
-      fetch(`http://localhost:3000/todos/${todoId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ todo: newTodoText }),
-      })
-        .then((response) => response.json())
-        .then(() => fetchTodos()) // Refresh the list
-        .catch((error) => console.error("Error updating task:", error));
-    }
+  if (target.classList.contains("mark-as-done")) {
+    markAsDone(todoId, li);
   } else if (target.classList.contains("delete-btn")) {
-    // Handle deleting
-    fetch(`http://localhost:3000/todos/${todoId}`, {
-      method: "DELETE",
-    })
-      .then((response) => response.json())
-      .then(() => fetchTodos()) // Refresh the list
-      .catch((error) => console.error("Error deleting task:", error));
-  } else if (target.tagName === "LI") {
-    // Handle marking as completed
-    const isChecked = !li.classList.contains("checked");
-    li.classList.toggle("checked", isChecked);
-    fetch(`http://localhost:3000/todos/${todoId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ completed: isChecked }),
-    })
-      .then((response) => response.json())
-      .then(() => fetchTodos()) // Refresh the list
-      .catch((error) => console.error("Error toggling task status:", error));
+    handleDelete(todoId);
   }
 });
 
-// Fetch todos when the page loads
 document.addEventListener("DOMContentLoaded", fetchTodos);

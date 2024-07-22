@@ -1,78 +1,76 @@
 {
   "todos": [
     {
-      "todo": "Wake up at 8am",
+      "completed": true,
       "id": "1"
     },
     {
-      "id": "2",
-      "todo": "Go to the gym",
-      "time": "7.30am",
-      "duration": "1hr 30mins",
-      "completed": false
+      "completed": true,
+      "id": "2"
     },
     {
-      "id": "3",
       "todo": "Make breakfast",
-      "time": "9.00am",
-      "duration": "1hr",
-      "completed": false
+      "id": "3"
     },
     {
-      "id": "4",
       "todo": "Begin school project",
-      "time": "10.00am",
-      "duration": "4hr 30mins",
-      "completed": false
+      "id": "4"
     },
     {
-      "id": "5",
-      "todo": "Grocery shopping",
-      "time": "4.00pm",
-      "duration": "1hr 30mins",
-      "completed": false
+      "completed": true,
+      "id": "6"
     },
     {
-      "id": "6",
-      "todo": "Make dinner",
-      "time": "6.00pm",
-      "duration": "1hr 30mins",
-      "completed": false
+      "completed": true,
+      "id": "7"
     },
     {
-      "id": "7",
-      "todo": "Feed the dog",
-      "time": "8.00pm",
-      "duration": "30mins",
-      "completed": false
+      "completed": true,
+      "id": "20a1"
     },
     {
-      "id": "8",
-      "todo": "Finish school project",
-      "time": "9.00pm",
-      "duration": "1hr 30mins",
-      "completed": false
+      "completed": true,
+      "id": "4cf3"
     },
     {
-      "id": "f076",
-      "todo": "Brush teeth",
-      "time": "",
-      "duration": "",
-      "completed": false
+      "completed": true,
+      "id": "f5be"
     },
     {
-      "id": "bec7",
+      "completed": true,
+      "id": "9dd0"
+    },
+    {
+      "completed": true,
+      "id": "8492"
+    },
+    {
+      "completed": true,
+      "id": "3d0d"
+    },
+    {
+      "completed": true,
+      "id": "18df"
+    },
+    {
+      "completed": true,
+      "id": "97b4"
+    },
+    {
+      "completed": false,
+      "id": "55f9"
+    },
+    {
+      "todo": "Dinner with Jane",
+      "id": "50d8"
+    },
+    {
+      "todo": "buy food",
+      "id": "6dbc"
+    },
+    {
       "todo": "hey",
-      "time": "",
-      "duration": "",
-      "completed": false
-    },
-    {
-      "id": "faa0",
-      "todo": "yooo",
-      "time": "",
-      "duration": "",
-      "completed": false
+      "id": "bb01"
     }
   ]
 }
